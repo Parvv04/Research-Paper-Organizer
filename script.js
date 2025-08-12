@@ -262,13 +262,14 @@ function selectPaper(id) {
   renderPapers(); // Re-render to update selection
 }
 
-// Show paper details including PDF preview if available
+// Show paper details including PDF preview if available, and inject AI Assistant tabs
 function showPaperDetails() {
   if (!selectedPaper) return;
 
   const noSelection = document.getElementById("noSelection");
   const paperDetails = document.getElementById("paperDetails");
   const detailsContent = document.getElementById("detailsContent");
+  const aiAssistantSection = document.getElementById("ai-assistant-section");
 
   noSelection.classList.add("hidden");
   paperDetails.classList.remove("hidden");
@@ -364,6 +365,14 @@ function showPaperDetails() {
             : ""
         }
 
+        <div class="detail-section">
+            <h4>AI Analysis</h4>
+            <button class="btn-primary" id="generateSummaryBtn" onclick="generatePaperSummary()">
+                <i class="fas fa-robot"></i>
+                Generate Summary
+            </button>
+        </div>
+
         <div class="citation-section">
             <h4>Generate Citation</h4>
             <div>
@@ -391,6 +400,128 @@ function showPaperDetails() {
             </div>
         </div>
     `;
+
+  // Clear any existing AI Assistant content
+  aiAssistantSection.innerHTML = '';
+}
+
+// Setup tab switching for AI Assistant
+function setupAIAssistantTabs() {
+  const tabBtns = document.querySelectorAll('.ai-tab-btn');
+  const tabContents = document.querySelectorAll('.ai-tab-content');
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      tabContents.forEach(tc => tc.classList.add('hidden'));
+      const tab = btn.getAttribute('data-tab');
+      document.getElementById('ai-tab-' + tab).classList.remove('hidden');
+    });
+  });
+}
+
+// Generate paper summary using Gemini API
+function generatePaperSummary() {
+  if (!selectedPaper) return;
+
+  const summaryBtn = document.getElementById('generateSummaryBtn');
+  summaryBtn.disabled = true;
+  summaryBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+
+  // Show the AI Assistant section
+  const aiAssistantSection = document.getElementById("ai-assistant-section");
+  fetch('ai-assistant.html')
+    .then(res => res.text())
+    .then(html => {
+      aiAssistantSection.innerHTML = html;
+      setupAIAssistantTabs();
+      loadAIAssistantContent(selectedPaper);
+    })
+    .finally(() => {
+      summaryBtn.disabled = false;
+      summaryBtn.innerHTML = '<i class="fas fa-robot"></i> Generate Summary';
+    });
+}
+
+// Load AI Assistant content (summary, visuals, etc.)
+function loadAIAssistantContent(paper) {
+  // Show loading state
+  document.getElementById('ai-summary-tldr').textContent = 'Loading summary...';
+  document.getElementById('ai-summary-detailed').textContent = '';
+  document.getElementById('ai-summary-keypoints').innerHTML = '';
+  document.getElementById('ai-summary-questions').innerHTML = '';
+  document.getElementById('ai-visuals-container').innerHTML = '';
+  document.getElementById('ai-assistant-response').textContent = '';
+
+  // Fetch Gemini summary and suggestions
+  window.AIAssistant.fetchGeminiInsights(paper)
+    .then(response => {
+      console.log('Gemini API response:', response); // Debug log
+      
+      // Extract content from the response
+      const text = response;
+      
+      // Parse sections using regex
+      const tldr = text.match(/TL;DR:?\s*(.*?)(?=\n\n|\n[A-Z]|$)/si)?.[1]?.trim();
+      const detailed = text.match(/Detailed Summary:?\s*(.*?)(?=\n\n|\n[A-Z]|$)/si)?.[1]?.trim();
+      const keyPoints = text.match(/Key Points?:?\s*((?:[-•].*?\n*)*)/si)?.[1]?.split(/\n\s*[-•]\s*/).filter(p => p.trim());
+      const questions = text.match(/Questions?:?\s*((?:[-•\d.].*?\n*)*)/si)?.[1]?.split(/\n\s*[-•\d.]\s*/).filter(q => q.trim());
+      
+      // Update TL;DR
+      document.getElementById('ai-summary-tldr').textContent = tldr || 'Generating summary...';
+      
+      // Update Detailed Summary
+      document.getElementById('ai-summary-detailed').textContent = detailed || '';
+      
+      // Update Key Points
+      const keyPointsEl = document.getElementById('ai-summary-keypoints');
+      if (keyPoints && keyPoints.length > 0) {
+        keyPointsEl.innerHTML = keyPoints
+          .map(point => `<li>${point}</li>`)
+          .join('');
+      }
+      
+      // Update Questions
+      const questionsEl = document.getElementById('ai-summary-questions');
+      if (questions && questions.length > 0) {
+        questionsEl.innerHTML = questions
+          .map(q => `<li>${q}</li>`)
+          .join('');
+      }
+
+      // Update Visualizations if any suggestions are present
+      if (insights.visualSuggestions && insights.visualSuggestions.length > 0) {
+        // For now, just show a sample visualization
+        window.AIAssistant.renderVisualization('keyword-frequency', {
+          keywords: ['AI', 'model', 'data', 'learning'],
+          counts: [12, 9, 7, 5]
+        }, 'ai-visuals-container');
+      }
+    })
+    .catch(() => {
+      document.getElementById('ai-summary-tldr').textContent = 'Failed to load summary.';
+    });
+
+  // Voice assistant: read summary aloud
+  document.getElementById('ai-speak-summary').onclick = function() {
+    const summary = document.getElementById('ai-summary-tldr').textContent;
+    window.AIAssistant.speakText(summary);
+  };
+
+  // AI Assistant chat
+  document.getElementById('ai-assistant-send').onclick = function() {
+    const input = document.getElementById('ai-assistant-input').value;
+    if (!input.trim()) return;
+    document.getElementById('ai-assistant-response').textContent = 'Thinking...';
+    // For demo, just echo the input. Replace with Gemini API call for chat.
+    window.AIAssistant.fetchGeminiInsights({ ...paper, question: input })
+      .then(resp => {
+        document.getElementById('ai-assistant-response').textContent = resp;
+      })
+      .catch(() => {
+        document.getElementById('ai-assistant-response').textContent = 'AI failed to answer.';
+      });
+  };
 }
 
 // Close paper details

@@ -12,6 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.ai-assistant.css" />
     <link rel="apple-touch-icon" sizes="180x180" href="./favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="48x48" href="./favicon/favicon-48x48.png">
     <link rel="icon" type="image/png" sizes="32x32" href="./favicon/favicon-32x32.png">
@@ -140,6 +141,8 @@
             <div class="details-content" id="detailsContent">
               <!-- Paper details go here -->
             </div>
+            <!-- AI Assistant Tabbed Section -->
+            <div id="ai-assistant-section"></div>
           </div>
         </div>
       </div>
@@ -284,6 +287,12 @@
         <h3>&copy; 2025 Research Paper Organizer . All rights reserved.</h3>
       </div>
      </footer>
-    <script src="script.js"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Plotly CDN (updated to latest v2.x) -->
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <!-- AI Assistant logic -->
+  <script src="ai-assistant.js"></script>
+  <script src="script.js"></script>
   </body>
 </html>

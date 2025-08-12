@@ -1,0 +1,27 @@
+<!-- AI Assistant Tabbed Section -->
+<div class="ai-tabs-section">
+  <div class="ai-tabs">
+    <button class="ai-tab-btn active" data-tab="summary">Summary</button>
+    <button class="ai-tab-btn" data-tab="visuals">Visuals</button>
+    <button class="ai-tab-btn" data-tab="assistant">AI Assistant</button>
+  </div>
+  <div class="ai-tab-content" id="ai-tab-summary">
+    <div id="ai-summary-tldr" class="ai-summary-block"></div>
+    <div id="ai-summary-detailed" class="ai-summary-block"></div>
+    <div id="ai-summary-keypoints" class="ai-summary-block"></div>
+    <div id="ai-summary-questions" class="ai-summary-block"></div>
+    <button id="ai-speak-summary" class="ai-speak-btn"><i class="fas fa-volume-up"></i> Read Aloud</button>
+  </div>
+  <div class="ai-tab-content hidden" id="ai-tab-visuals">
+    <div id="ai-visuals-container"></div>
+  </div>
+  <div class="ai-tab-content hidden" id="ai-tab-assistant">
+    <div id="ai-assistant-chat">
+      <p>Ask the AI Assistant about this paper or request a visualization.</p>
+      <textarea id="ai-assistant-input" rows="2" placeholder="Ask a question or type a command..."></textarea>
+      <button id="ai-assistant-send" class="btn-primary">Ask AI</button>
+      <div id="ai-assistant-response"></div>
+    </div>
+  </div>
+</div>
+<!-- End AI Assistant Tabbed Section -->

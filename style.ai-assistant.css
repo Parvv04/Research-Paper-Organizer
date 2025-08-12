@@ -1,0 +1,120 @@
+/* --- AI Assistant Tabbed Section (flat, isolated) --- */
+.ai-tabs-section {
+  margin-top: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.07);
+  padding: 1.5rem;
+}
+.dark-mode .ai-tabs-section {
+  background: #1f2937;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.08);
+}
+.ai-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.ai-tab-btn {
+  background: #f3f4f6;
+  border: none;
+  border-radius: 6px 6px 0 0;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  color: #2563eb;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+.ai-tab-btn.active, .ai-tab-btn:hover {
+  background: #2563eb;
+  color: #fff;
+}
+.dark-mode .ai-tab-btn {
+  background: #374151;
+  color: #60a5fa;
+}
+.dark-mode .ai-tab-btn.active, .dark-mode .ai-tab-btn:hover {
+  background: #2563eb;
+  color: #fff;
+}
+.ai-tab-content {
+  display: block;
+}
+.ai-tab-content.hidden {
+  display: none;
+}
+.ai-summary-block {
+  margin-bottom: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 1rem;
+  color: #1f2937;
+  font-size: 1rem;
+}
+.dark-mode .ai-summary-block {
+  background: #111827;
+  color: #d1d5db;
+}
+#ai-speak-summary {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+#ai-speak-summary:hover {
+  background: #1d4ed8;
+}
+.ai-visuals-container {
+  min-height: 200px;
+  margin-bottom: 1rem;
+}
+#ai-assistant-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+#ai-assistant-input {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 0.75rem;
+  font-size: 1rem;
+  resize: vertical;
+}
+.dark-mode #ai-assistant-input {
+  background: #111827;
+  color: #d1d5db;
+  border: 1px solid #374151;
+}
+#ai-assistant-send {
+  align-self: flex-end;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+#ai-assistant-send:hover {
+  background: #1d4ed8;
+}
+#ai-assistant-response {
+  background: #f3f4f6;
+  border-radius: 8px;
+  padding: 1rem;
+  color: #1f2937;
+  min-height: 40px;
+}
+.dark-mode #ai-assistant-response {
+  background: #111827;
+  color: #d1d5db;
+}
